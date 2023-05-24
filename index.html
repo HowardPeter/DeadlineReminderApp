@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Document</title>
+
+      <!-- External CSS Link -->
+      <link rel="stylesheet" href="style.css" />
+   </head>
+   <body>
+      <nav class="navbar">
+         <h1>Logo</h1>
+      </nav>
+      <div class="container">
+         <h1 class="title"></h1>
+         <div class="addReminder">
+            <input type="text" id="reminder" />
+            <input type="date" name="" id="inpDate" />
+            <input
+               type="button"
+               value="Add Reminder"
+               onclick="obj.addReminder()"
+            />
+         </div>
+         <div class="todayReminder">
+            <h3>Today</h3>
+            <ul id="todayReminderList"></ul>
+         </div>
+         <div class="tomorrowReminder">
+            <h3>Tomorrow</h3>
+            <ul id="tommorrowReminderList"></ul>
+         </div>
+         <div class="otherDay">
+            <h3>Upcoming</h3>
+            <ul id="otherDayReminderList"></ul>
+         </div>
+      </div>
+   </body>
+   <script src="index.js"></script>
+</html>
