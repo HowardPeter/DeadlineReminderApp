@@ -6,25 +6,19 @@ class ReminderApp {
       Upcoming: [],
    };
 
-   //-----FUnction to save reminders in localstorage
+   //-----Function to save reminders in localstorage
    saveReminders() {
       if (this.db) {
          localStorage.setItem("DB", JSON.stringify(this.db));
-         console.log(`Save Reminder working`);
       }
    }
 
+   //-----Function to retain data from localstorage
    getReminders() {
       this.db = JSON.parse(localStorage.getItem("DB"));
-      console.log(`Get Reminder working`);
    }
 
-   taskComplete(e) {
-      this.getReminders();
-
-      console.log(e.value);
-   }
-
+   //-----Function to update data in localstorage
    updateReminder() {
       this.getReminders();
 
@@ -34,9 +28,6 @@ class ReminderApp {
       let tomorrow = today + 1;
       let thisMonth = date.getMonth();
       let thisYear = date.getFullYear();
-
-      let data = {};
-      console.log(`update working`);
 
       //-----Today list update
       let todayUpdatedData = this.db.Today.filter((data) => data.day == today);
@@ -55,48 +46,52 @@ class ReminderApp {
       this.db.Tomorrow = tomorrowUpdatedData;
 
       //-----Upcoming list update
+      let upcomingUpdatedData = [];
+
       for (let i = 0; i < this.db.Upcoming.length; i++) {
          if (
             this.db.Upcoming[i].year == thisYear &&
-            this.db.Upcoming[i].month == thisMonth &&
-            this.db.Upcoming[i].day == today
+            this.db.Upcoming[i].month == thisMonth
          ) {
-            let updatedData = this.db.Upcoming[i];
-            Array.prototype.push.call(this.db.Today, updatedData);
+            if (this.db.Upcoming[i].day == today) {
+               let updatedData = this.db.Upcoming[i];
+               Array.prototype.push.call(this.db.Today, updatedData);
+            } else if (this.db.Upcoming[i].day == tomorrow) {
+               let updatedData = this.db.Upcoming[i];
+               Array.prototype.push.call(this.db.Tomorrow, updatedData);
+            } else {
+               let updatedData = this.db.Upcoming[i];
+               Array.prototype.push.call(upcomingUpdatedData, updatedData);
+            }
          } else if (
-            this.db.Upcoming[i].year == thisYear &&
-            this.db.Upcoming[i].month == thisMonth &&
-            this.db.Upcoming[i].day == tomorrow
+            this.db.Upcoming[i].year != thisYear ||
+            this.db.Upcoming[i].month != thisMonth
          ) {
             let updatedData = this.db.Upcoming[i];
-            Array.prototype.push.call(this.db.Tomorrow, updatedData);
+            Array.prototype.push.call(upcomingUpdatedData, updatedData);
          }
       }
-      let upcomingUpdatedData = this.db.Upcoming.filter(
-         (data) => data.day != today && data.day != tomorrow
-      );
       this.db.Upcoming = upcomingUpdatedData;
-      console.log(data);
       this.saveReminders();
    }
 
+   //-----Function to load/display data from localstorage to html page
    loadReminder() {
-      console.log("Working");
-      // this.saveReminders();
       this.getReminders();
       for (let i of this.db.Today) {
-         todayReminderList.innerHTML += `<li><input type="checkbox" onclick="obj.taskComplete(this)" class="check"> ${i.reminder}</li>`;
+         todayReminderList.innerHTML += `<li> ${i.reminder}</li>`;
       }
 
       for (let i of this.db.Tomorrow) {
-         tommorrowReminderList.innerHTML += `<li><input type="checkbox" onclick="obj.taskComplete(this)" class="check"> ${i.reminder}</li>`;
+         tommorrowReminderList.innerHTML += `<li> ${i.reminder}</li>`;
       }
 
       for (let i of this.db.Upcoming) {
-         otherDayReminderList.innerHTML += `<li><input type="checkbox" onclick="obj.taskComplete(this)" class="check"> ${i.reminder} (${i.day}-${i.month}-${i.year})</li>`;
+         otherDayReminderList.innerHTML += `<li> ${i.reminder} (${i.day}-${i.month}-${i.year})</li>`;
       }
    }
 
+   //-----Function to add data to database
    addReminder() {
       this.getReminders();
 
@@ -113,48 +108,50 @@ class ReminderApp {
       let reminderMonth = reminderDate.getMonth();
       let reminderYear = reminderDate.getFullYear();
 
-      let data = {
-         reminder: reminder.value,
-         day: reminderDay,
-         month: reminderMonth,
-         year: reminderYear,
-         completed: false,
-      };
-
-      if (
-         reminderDay == today &&
-         reminderMonth == thisMonth &&
-         reminderYear == thisYear
-      ) {
-         //-----Save reminder to localstorage
-
-         Array.prototype.push.call(this.db.Today, data);
-         this.saveReminders();
-
-         //-----Set reminder for today
-         todayReminderList.innerHTML += `<li><input type="checkbox" onclick="obj.taskComplete(this)" class="check">${reminder.value}</li>`;
-      } else if (
-         reminderDay == tomorrow &&
-         reminderMonth == thisMonth &&
-         reminderYear == thisYear
-      ) {
-         //-----Save reminder to localstorage
-         Array.prototype.push.call(this.db.Tomorrow, data);
-         this.saveReminders();
-
-         //-----Set reminder for tomorrow
-         tommorrowReminderList.innerHTML += `<li><input type="checkbox" onclick="obj.taskComplete(this)" class="check">${reminder.value}</li>`;
-      } else if (reminderDate < date) {
-         //-----Invalid Input date
-         alert("You can't time travel to the past, Can you??");
+      if (reminder.value === "" || inpDate.value === "") {
+         //------------------------------------------------------Have to do
       } else {
-         //-----Save reminder to localstorage
-         Array.prototype.push.call(this.db.Upcoming, data);
-         this.saveReminders();
+         let data = {
+            reminder: reminder.value,
+            day: reminderDay,
+            month: reminderMonth,
+            year: reminderYear,
+         };
 
-         //-----Set reminder for upcoming
-         otherDayReminderList.innerHTML += `<li><input type="checkbox" onclick="obj.taskComplete(this)" class="check">${reminder.value} (${reminderDay}-${reminderMonth}-${reminderYear})</li>`;
+         if (
+            reminderDay == today &&
+            reminderMonth == thisMonth &&
+            reminderYear == thisYear
+         ) {
+            //-----Add data to database
+
+            Array.prototype.push.call(this.db.Today, data);
+
+            //-----Set data for today list
+            todayReminderList.innerHTML += `<li>${reminder.value}</li>`;
+         } else if (
+            reminderDay == tomorrow &&
+            reminderMonth == thisMonth &&
+            reminderYear == thisYear
+         ) {
+            //-----Add data to database
+
+            Array.prototype.push.call(this.db.Tomorrow, data);
+
+            //-----Set data for tomorrow list
+            tommorrowReminderList.innerHTML += `<li>${reminder.value}</li>`;
+         } else if (reminderDate < date) {
+            //-----Invalid Input date
+            alert("You can't time travel to the past, Can you??");
+         } else {
+            //-----Add data to database
+            Array.prototype.push.call(this.db.Upcoming, data);
+
+            //-----Set data for upcoming list
+            otherDayReminderList.innerHTML += `<li>${reminder.value} (${reminderDay}-${reminderMonth}-${reminderYear})</li>`;
+         }
       }
+      this.saveReminders();
    }
 }
 
@@ -166,7 +163,8 @@ if (!localStorage.getItem("DB")) {
 obj.updateReminder();
 obj.loadReminder();
 
-let t = new Date();
-console.log(t);
+let today = new Date();
 
-document.querySelector(".title").innerHTML = t.getDate();
+document.querySelector(
+   ".title"
+).innerHTML = `${today.getDate()}-${today.getMonth()}-${today.getFullYear()}`;
