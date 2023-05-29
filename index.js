@@ -151,6 +151,8 @@ class ReminderApp {
          }
       }
       this.saveReminders();
+      reminder.value = "";
+      inpDate.value = "";
    }
 }
 
