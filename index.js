@@ -26,7 +26,7 @@ class ReminderApp {
       let date = new Date();
       let today = date.getDate();
       let tomorrow = today + 1;
-      let thisMonth = date.getMonth();
+      let thisMonth = date.getMonth() + 1;
       let thisYear = date.getFullYear();
 
       //-----Today list update
@@ -79,15 +79,15 @@ class ReminderApp {
    loadReminder() {
       this.getReminders();
       for (let i of this.db.Today) {
-         todayReminderList.innerHTML += `<li> ${i.reminder}</li>`;
+         todayReminderList.innerHTML += `<li>${i.reminder}</li>`;
       }
 
       for (let i of this.db.Tomorrow) {
-         tommorrowReminderList.innerHTML += `<li> ${i.reminder}</li>`;
+         tommorrowReminderList.innerHTML += `<li>${i.reminder}</li>`;
       }
 
       for (let i of this.db.Upcoming) {
-         otherDayReminderList.innerHTML += `<li> ${i.reminder} (${i.day}-${i.month}-${i.year})</li>`;
+         otherDayReminderList.innerHTML += `<li>${i.reminder} (${i.day}-${i.month}-${i.year})</li>`;
       }
    }
 
@@ -99,17 +99,17 @@ class ReminderApp {
       let date = new Date();
       let today = date.getDate();
       let tomorrow = today + 1;
-      let thisMonth = date.getMonth();
+      let thisMonth = date.getMonth() + 1;
       let thisYear = date.getFullYear();
 
       //-----Input Date info
       let reminderDate = new Date(inpDate.value);
       let reminderDay = reminderDate.getDate();
-      let reminderMonth = reminderDate.getMonth();
+      let reminderMonth = reminderDate.getMonth() + 1;
       let reminderYear = reminderDate.getFullYear();
-
       if (reminder.value === "" || inpDate.value === "") {
          //------------------------------------------------------Have to do
+         alert("Please enter value");
       } else {
          let data = {
             reminder: reminder.value,
@@ -117,7 +117,6 @@ class ReminderApp {
             month: reminderMonth,
             year: reminderYear,
          };
-
          if (
             reminderDay == today &&
             reminderMonth == thisMonth &&
@@ -165,6 +164,6 @@ obj.loadReminder();
 
 let today = new Date();
 
-document.querySelector(
-   ".title"
-).innerHTML = `${today.getDate()}-${today.getMonth()}-${today.getFullYear()}`;
+dateDisplay.innerHTML = `Today: ${today.getDate()}-${
+   today.getMonth() + 1
+}-${today.getFullYear()}`;

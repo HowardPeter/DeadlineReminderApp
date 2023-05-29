@@ -8,34 +8,50 @@
 
       <!-- External CSS Link -->
       <link rel="stylesheet" href="style.css" />
+
+      <!-- FontAwesome Link -->
+      <link
+         rel="stylesheet"
+         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+         crossorigin="anonymous"
+         referrerpolicy="no-referrer"
+      />
    </head>
    <body>
       <nav class="navbar">
-         <h1>Logo</h1>
+         <div class="logo">
+            <img src="src/logo1.png" alt="Logo Image" />
+            <h1>Let me remind you</h1>
+         </div>
+         <h1 id="dateDisplay"></h1>
       </nav>
       <div class="container">
-         <h1 class="title"></h1>
          <div class="addReminder">
-            <input type="text" id="reminder" />
-            <input type="date" name="" id="inpDate" />
-            <input
-               type="button"
-               value="Add Reminder"
-               onclick="obj.addReminder()"
-            />
+            <input type="text" id="reminder" placeholder="Enter the task" />
+            <input type="date" name="" id="inpDate" class="dateInp" />
+            <button type="button" onclick="obj.addReminder()">
+               <i class="fa-solid fa-plus"></i>
+            </button>
          </div>
-         <div class="todayReminder">
-            <h3>Today</h3>
-            <ul id="todayReminderList"></ul>
+         <div class="remindersList">
+            <div class="todayReminder">
+               <h3>Today</h3>
+               <ul id="todayReminderList"></ul>
+            </div>
+            <div class="tomorrowReminder">
+               <h3>Tomorrow</h3>
+               <ul id="tommorrowReminderList"></ul>
+            </div>
+            <div class="otherDay">
+               <h3>Upcoming</h3>
+               <ul id="otherDayReminderList"></ul>
+            </div>
          </div>
-         <div class="tomorrowReminder">
-            <h3>Tomorrow</h3>
-            <ul id="tommorrowReminderList"></ul>
-         </div>
-         <div class="otherDay">
-            <h3>Upcoming</h3>
-            <ul id="otherDayReminderList"></ul>
-         </div>
+      </div>
+      <div class="image">
+         <img src="src/leaves.png" class="leafLeft"/>
+         <img src="src/leaves.png" class="leafRight"/>
       </div>
    </body>
    <script src="index.js"></script>
